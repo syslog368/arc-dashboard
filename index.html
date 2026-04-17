@@ -1,0 +1,65 @@
+{
+  "entities": {
+    "Escrow": {
+      "title": "Escrow Job",
+      "description": "Represents an ERC-8183 Agentic Escrow instance tracking funding and settlement.",
+      "type": "object",
+      "properties": {
+        "jobId": { "type": "string", "description": "Unique identifier for the work order." },
+        "amount": { "type": "string", "description": "Total USDC amount allocated." },
+        "status": { 
+          "type": "string", 
+          "enum": ["idle", "funded", "completed", "released"],
+          "description": "Current lifecycle state of the escrow."
+        },
+        "evaluator": { "type": "string", "description": "Address of the autonomous evaluator." },
+        "beneficiary": { "type": "string", "description": "Address of the worker agent profile." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["jobId", "amount", "status", "evaluator", "beneficiary"]
+    },
+    "Agent": {
+      "title": "Agent Instance",
+      "description": "An autonomous agency instance operating on the network.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "status": { "type": "string" },
+        "value": { "type": "string" },
+        "load": { "type": "string" },
+        "color": { "type": "string" }
+      },
+      "required": ["id", "name", "status"]
+    },
+    "TransactionLog": {
+      "title": "Transaction Log",
+      "description": "A recorded event on the Arc protocol ledger.",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date-time" },
+        "type": { "type": "string", "enum": ["Funding", "Execution", "Release"] },
+        "amount": { "type": "string" },
+        "address": { "type": "string" },
+        "txHash": { "type": "string" },
+        "escrowId": { "type": "string" }
+      },
+      "required": ["date", "type", "amount", "txHash"]
+    }
+  },
+  "firestore": {
+    "/escrows/{escrowId}": {
+      "schema": "Escrow",
+      "description": "State of individual escrow instruments."
+    },
+    "/agents/{agentId}": {
+      "schema": "Agent",
+      "description": "Registry of autonomous agents."
+    },
+    "/logs/{logId}": {
+      "schema": "TransactionLog",
+      "description": "Global event log for protocol transparency."
+    }
+  }
+}

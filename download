@@ -1,0 +1,46 @@
+import { initializeApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getFirestore, doc, collection, onSnapshot, setDoc, updateDoc, deleteDoc, getDoc, getDocs, query, where, orderBy, limit, serverTimestamp, getDocFromServer } from 'firebase/firestore';
+
+// Import the Firebase configuration
+import firebaseConfig from '../../firebase-applet-config.json';
+
+// Initialize Firebase SDK
+const app = initializeApp(firebaseConfig);
+
+// Support both standard and named database IDs as per instructions
+export const db = getFirestore(app, (firebaseConfig as any).firestoreDatabaseId || undefined);
+export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+
+// Connection test as per instructions
+async function testConnection() {
+  try {
+    // Testing connection to a 'test' collection
+    await getDocFromServer(doc(db, 'test', 'connection'));
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('the client is offline')) {
+      console.error("Please check your Firebase configuration. The client appears to be offline.");
+    }
+  }
+}
+
+testConnection();
+
+// Export Firestore utilities for use throughout the app
+export { 
+  doc, 
+  collection, 
+  onSnapshot, 
+  setDoc, 
+  updateDoc, 
+  deleteDoc, 
+  getDoc, 
+  getDocs, 
+  query, 
+  where, 
+  orderBy, 
+  limit, 
+  serverTimestamp,
+  signInWithPopup
+};
